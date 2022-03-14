@@ -51,7 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return jdbcTokenRepository;
     }
 
-
     //스태틱리소스들은 걍패스시켜라라
     @Override
     public void configure(WebSecurity web) throws Exception {
