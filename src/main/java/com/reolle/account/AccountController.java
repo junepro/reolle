@@ -2,7 +2,7 @@ package com.reolle.account;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.Banner;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -18,6 +18,7 @@ import javax.validation.Valid;
 public class AccountController {
 
     private final SignUpFormValidator signUpFormValidator;
+    private final AccountService accountService;
 
     //사인업폼 받을때 밸리데이터 적용
     @InitBinder("signUpForm")
@@ -38,8 +39,10 @@ public class AccountController {
         if (errors.hasErrors()) {
             return "account/sign-up";
         }
+        accountService.processNewAccount(signUpForm);
         return "redirect:/";
     }
+
 
 }
 
