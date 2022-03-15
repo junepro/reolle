@@ -1,6 +1,7 @@
 package com.reolle.account;
 
 import com.reolle.domain.Account;
+import com.reolle.settings.Notifications;
 import com.reolle.settings.Profile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.management.Notification;
 import java.util.List;
 
 @Service
@@ -98,6 +100,16 @@ public class AccountService implements UserDetailsService {
 
     public void updatePassword(Account account, String newPassword) {
         account.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(account);
+    }
+
+    public void updateNotifications(Account account, Notifications notifications) {
+        account.setStudyCreatedByWeb(notifications.isStudyCreatedByWeb());
+        account.setStudyCreatedByEmail(notifications.isStudyCreatedByEmail());
+        account.setStudyUpdatedByWeb(notifications.isStudyUpdatedByWeb());
+        account.setStudyUpdatedByEmail(notifications.isStudyUpdatedByEmail());
+        account.setStudyEnrollmentResultByEmail(notifications.isStudyEnrollmentResultByEmail());
+        account.setStudyEnrollmentResultByWeb(notifications.isStudyEnrollmentResultByWeb());
         accountRepository.save(account);
     }
 }
