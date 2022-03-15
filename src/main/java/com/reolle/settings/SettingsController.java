@@ -3,14 +3,14 @@ package com.reolle.settings;
 import com.reolle.account.AccountService;
 import com.reolle.account.CurrentAccount;
 import com.reolle.domain.Account;
-import com.reolle.settings.form.NicknameForm;
-import com.reolle.settings.form.Notifications;
-import com.reolle.settings.form.PasswordForm;
-import com.reolle.settings.form.Profile;
+import com.reolle.domain.Tag;
+import com.reolle.settings.form.*;
 import com.reolle.settings.validator.NicknameValidator;
 import com.reolle.settings.validator.PasswordFormValidator;
+import com.reolle.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -38,9 +39,13 @@ public class SettingsController {
     public static final String SETTINGS_ACCOUNT_VIEW_NAME = "settings/account";
     public static final String SETTINGS_ACCOUNT_URL = "/settings/account";
 
+    public static final String SETTINGS_TAG_VIEW_NAME = "settings/tags";
+    public static final String SETTINGS_TAG_URL = "/settings/tags";
+
     private final AccountService accountService;
     private final ModelMapper modelMapper;
     private final NicknameValidator nicknameValidator;
+    private final TagRepository tagRepository;
 
     @InitBinder("passwordForm")
     public void passwordInitBinder(WebDataBinder webDataBinder) {
@@ -126,7 +131,7 @@ public class SettingsController {
 
     @PostMapping(SETTINGS_ACCOUNT_URL)
     public String updateAccount(@CurrentAccount Account account, @Valid NicknameForm nicknameForm,
-                                      Model model, Errors errors, RedirectAttributes attributes) {
+                                Model model, Errors errors, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
             model.addAttribute(account);
             return SETTINGS_ACCOUNT_VIEW_NAME;
@@ -136,6 +141,23 @@ public class SettingsController {
         return "redirect:" + SETTINGS_ACCOUNT_URL;
     }
 
+    @GetMapping(SETTINGS_TAG_URL)
+    public String updateTags(@CurrentAccount Account account, Model model) {
+        model.addAttribute(account);
+        return SETTINGS_TAG_VIEW_NAME;
+    }
 
+    @PostMapping("/settings/tags/add")
+    public ResponseEntity addTag(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
+        String title = tagForm.getTagTitle();
+
+        Tag tag = tagRepository.findByTitle(title);
+        if (tag == null) {
+            tag = tagRepository.save(Tag.builder().title(tagForm.getTagTitle()).build());
+        }
+
+        accountService.addTag(account, tag);
+        return ResponseEntity.ok().build();
+    }
 }
 
