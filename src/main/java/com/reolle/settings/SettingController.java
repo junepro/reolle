@@ -17,8 +17,8 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class SettingController {
 
-    private static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
-    private static final String SETTINGS_PROFILE_URL = "/settings/profile";
+    public static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
+    public static final String SETTINGS_PROFILE_URL = "/settings/profile";
 
     private final AccountService accountService;
 
