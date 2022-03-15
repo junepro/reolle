@@ -1,12 +1,15 @@
 package com.reolle.account;
 
 import com.reolle.domain.Account;
+import com.reolle.settings.form.NicknameForm;
+import com.reolle.settings.form.Notifications;
+import com.reolle.settings.form.Profile;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,14 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
-    @Transactional
     public Account processNewAccount(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
         newAccount.generateEmailCheckToken();
@@ -66,6 +70,7 @@ public class AccountService implements UserDetailsService {
 
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String emailOrNickname) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmail(emailOrNickname);
@@ -76,7 +81,57 @@ public class AccountService implements UserDetailsService {
         if (account == null) {
             throw new UsernameNotFoundException(emailOrNickname);
         }
-
         return new UserAccount(account);
+    }
+
+    public void completeSignUp(Account account) {
+        account.completeSignUp();
+        login(account);
+    }
+
+    public void updateProfile(Account account, Profile profile) {
+        modelMapper.map(profile, account);
+        //위 한줄로 밑 해결
+//        account.setUrl(profile.getUrl());
+//        account.setOccupation(profile.getOccupation());
+//        account.setLocation(profile.getLocation());
+//        account.setBio(profile.getBio());
+//        account.setProfileImage(profile.getProfileImage());
+        accountRepository.save(account);
+
+    }
+
+    public void updatePassword(Account account, String newPassword) {
+        account.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(account);
+    }
+
+    public void updateNotifications(Account account, Notifications notifications) {
+        modelMapper.map(notifications, account);
+//        account.setStudyCreatedByWeb(notifications.isStudyCreatedByWeb());
+//        account.setStudyCreatedByEmail(notifications.isStudyCreatedByEmail());
+//        account.setStudyUpdatedByWeb(notifications.isStudyUpdatedByWeb());
+//        account.setStudyUpdatedByEmail(notifications.isStudyUpdatedByEmail());
+//        account.setStudyEnrollmentResultByEmail(notifications.isStudyEnrollmentResultByEmail());
+//        account.setStudyEnrollmentResultByWeb(notifications.isStudyEnrollmentResultByWeb());
+        accountRepository.save(account);
+    }
+
+    public void updateNickname(Account account, String nickname) {
+        account.setNickname(nickname);
+        accountRepository.save(account);
+        login(account);
+
+    }
+
+    public void sendLoginLink(Account account) {
+        account.generateEmailCheckToken();
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(account.getEmail());
+        mailMessage.setSubject("스터디올레, 로그인 링크");
+        mailMessage.setText("/login-by-email?token=" + account.getEmailCheckToken()
+                + "&email=" + account.getEmail());
+        javaMailSender.send(mailMessage);
+
     }
 }
