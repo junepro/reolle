@@ -17,7 +17,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
-public class SettingController {
+public class SettingsController {
 
     @InitBinder("passwordForm")
     public void initBinder(WebDataBinder webDataBinder) {
