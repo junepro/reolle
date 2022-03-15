@@ -128,6 +128,7 @@ public class AccountController {
             model.addAttribute("error", "로그인할 수 없습니다.");
             return view;
         }
+
         accountService.login(account);
         return view;
     }
