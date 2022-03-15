@@ -3,6 +3,12 @@ package com.reolle.settings;
 import com.reolle.account.AccountService;
 import com.reolle.account.CurrentAccount;
 import com.reolle.domain.Account;
+import com.reolle.settings.form.NicknameForm;
+import com.reolle.settings.form.Notifications;
+import com.reolle.settings.form.PasswordForm;
+import com.reolle.settings.form.Profile;
+import com.reolle.settings.validator.NicknameValidator;
+import com.reolle.settings.validator.PasswordFormValidator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -29,12 +35,21 @@ public class SettingsController {
     public static final String SETTINGS_NOTIFICATIONS_VIEW_NAME = "settings/notifications";
     public static final String SETTINGS_NOTIFICATIONS_URL = "/settings/notifications";
 
+    public static final String SETTINGS_ACCOUNT_VIEW_NAME = "settings/account";
+    public static final String SETTINGS_ACCOUNT_URL = "/settings/account";
+
     private final AccountService accountService;
     private final ModelMapper modelMapper;
+    private final NicknameValidator nicknameValidator;
 
     @InitBinder("passwordForm")
-    public void initBinder(WebDataBinder webDataBinder) {
+    public void passwordInitBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(new PasswordFormValidator());
+    }
+
+    @InitBinder("nicknameForm")
+    public void nicknameInitBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(nicknameValidator);
     }
 
     @GetMapping(SETTINGS_PROFILE_URL)
@@ -97,10 +112,30 @@ public class SettingsController {
             model.addAttribute(account);
             return SETTINGS_NOTIFICATIONS_VIEW_NAME;
         }
-
         accountService.updateNotifications(account, notifications);
         attributes.addFlashAttribute("message", "알림 설정을 변경했습니다");
         return "redirect:" + SETTINGS_NOTIFICATIONS_URL;
     }
+
+    @GetMapping(SETTINGS_ACCOUNT_URL)
+    public String updateAccountForm(@CurrentAccount Account account, Model model) {
+        model.addAttribute(account);
+        model.addAttribute(modelMapper.map(account, NicknameForm.class));
+        return SETTINGS_ACCOUNT_VIEW_NAME;
+    }
+
+    @PostMapping(SETTINGS_ACCOUNT_URL)
+    public String updateAccount(@CurrentAccount Account account, @Valid NicknameForm nicknameForm,
+                                      Model model, Errors errors, RedirectAttributes attributes) {
+        if (errors.hasErrors()) {
+            model.addAttribute(account);
+            return SETTINGS_ACCOUNT_VIEW_NAME;
+        }
+        accountService.updateNickname(account, nicknameForm.getNickname());
+        attributes.addFlashAttribute("message", "닉네임을 수정했습니다.");
+        return "redirect:" + SETTINGS_ACCOUNT_URL;
+    }
+
+
 }
 

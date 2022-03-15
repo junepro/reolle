@@ -1,5 +1,6 @@
-package com.reolle.settings;
+package com.reolle.settings.validator;
 
+import com.reolle.settings.form.PasswordForm;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

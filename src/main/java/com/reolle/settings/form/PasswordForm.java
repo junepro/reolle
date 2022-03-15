@@ -1,4 +1,4 @@
-package com.reolle.settings;
+package com.reolle.settings.form;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

@@ -1,15 +1,15 @@
 package com.reolle.account;
 
 import com.reolle.domain.Account;
-import com.reolle.settings.Notifications;
-import com.reolle.settings.Profile;
+import com.reolle.settings.form.NicknameForm;
+import com.reolle.settings.form.Notifications;
+import com.reolle.settings.form.Profile;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.management.Notification;
 import java.util.List;
 
 @Service
@@ -116,5 +115,12 @@ public class AccountService implements UserDetailsService {
 //        account.setStudyEnrollmentResultByEmail(notifications.isStudyEnrollmentResultByEmail());
 //        account.setStudyEnrollmentResultByWeb(notifications.isStudyEnrollmentResultByWeb());
         accountRepository.save(account);
+    }
+
+    public void updateNickname(Account account, String nickname) {
+        account.setNickname(nickname);
+        accountRepository.save(account);
+        login(account);
+
     }
 }
