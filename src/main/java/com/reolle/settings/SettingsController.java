@@ -1,5 +1,7 @@
 package com.reolle.settings;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reolle.account.AccountService;
 import com.reolle.account.CurrentAccount;
 import com.reolle.domain.Account;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,6 +48,7 @@ public class SettingsController {
     private final ModelMapper modelMapper;
     private final NicknameValidator nicknameValidator;
     private final TagRepository tagRepository;
+    private final ObjectMapper objectMapper;
 
     @InitBinder("passwordForm")
     public void passwordInitBinder(WebDataBinder webDataBinder) {
@@ -141,10 +145,13 @@ public class SettingsController {
     }
 
     @GetMapping(SETTINGS_TAG_URL)
-    public String updateTags(@CurrentAccount Account account, Model model) {
+    public String updateTags(@CurrentAccount Account account, Model model) throws JsonProcessingException {
         model.addAttribute(account);
         Set<Tag> tags = accountService.getTags(account);
         model.addAttribute("tags", tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
+
+        List<String> allTags = tagRepository.findAll().stream().map(Tag::getTitle).collect(Collectors.toList());
+        model.addAttribute("whiteList", objectMapper.writeValueAsString(allTags));
         return SETTINGS_TAG_VIEW_NAME;
     }
 
