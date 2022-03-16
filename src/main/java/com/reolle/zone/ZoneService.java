@@ -26,7 +26,7 @@ public class ZoneService {
         if (zoneRepository.count() == 0) {
             Resource resource = new ClassPathResource("zones_kr.csv");
             List<Zone> zoneList = Files.readAllLines(resource.getFile().toPath(), StandardCharsets.UTF_8).stream()
-                    .map(line ->{
+                    .map(line -> {
                         String[] split = line.split(",");
                         return Zone.builder().city(split[0]).localNameOfCity(split[1]).province(split[2]).build();
                     }).collect(Collectors.toList());
