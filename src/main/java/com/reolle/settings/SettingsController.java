@@ -41,8 +41,8 @@ public class SettingsController {
     public static final String SETTINGS_ACCOUNT_VIEW_NAME = "settings/account";
     public static final String SETTINGS_ACCOUNT_URL = "/settings/account";
 
-    public static final String SETTINGS_TAG_VIEW_NAME = "settings/tags";
-    public static final String SETTINGS_TAG_URL = "/settings/tags";
+    public static final String SETTINGS_TAGS_VIEW_NAME = "settings/tags";
+    public static final String SETTINGS_TAGS_URL = "/settings/tags";
 
     private final AccountService accountService;
     private final ModelMapper modelMapper;
@@ -144,15 +144,15 @@ public class SettingsController {
         return "redirect:" + SETTINGS_ACCOUNT_URL;
     }
 
-    @GetMapping(SETTINGS_TAG_URL)
+    @GetMapping(SETTINGS_TAGS_URL)
     public String updateTags(@CurrentAccount Account account, Model model) throws JsonProcessingException {
         model.addAttribute(account);
         Set<Tag> tags = accountService.getTags(account);
         model.addAttribute("tags", tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
 
         List<String> allTags = tagRepository.findAll().stream().map(Tag::getTitle).collect(Collectors.toList());
-        model.addAttribute("whiteList", objectMapper.writeValueAsString(allTags));
-        return SETTINGS_TAG_VIEW_NAME;
+        model.addAttribute("whitelist", objectMapper.writeValueAsString(allTags));
+        return SETTINGS_TAGS_VIEW_NAME;
     }
 
     @PostMapping("/settings/tags/add")
@@ -168,7 +168,7 @@ public class SettingsController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(SETTINGS_TAG_URL + "/remove")
+    @PostMapping(SETTINGS_TAGS_URL + "/remove")
     @ResponseBody
     public ResponseEntity removeTag(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
         String title = tagForm.getTagTitle();

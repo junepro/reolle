@@ -42,14 +42,17 @@ public class AccountService implements UserDetailsService {
 
 
     private Account saveNewAccount(SignUpForm signUpForm) {
-        Account account = Account.builder()
-                .email(signUpForm.getEmail())
-                .nickname(signUpForm.getNickname())
-                .password(passwordEncoder.encode(signUpForm.getPassword()))
-                .studyCreatedByWeb(true)
-                .studyEnrollmentResultByWeb(true)
-                .studyUpdatedByWeb(true)
-                .build();
+        signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+        Account account = modelMapper.map(signUpForm, Account.class);
+        account.generateEmailCheckToken();
+//        Account account = Account.builder()
+//                .email(signUpForm.getEmail())
+//                .nickname(signUpForm.getNickname())
+//                .password(passwordEncoder.encode(signUpForm.getPassword()))
+//                .studyCreatedByWeb(true)
+//                .studyEnrollmentResultByWeb(true)
+//                .studyUpdatedByWeb(true)
+//                .build();
 
         return accountRepository.save(account);
     }
