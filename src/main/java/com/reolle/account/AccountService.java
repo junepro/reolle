@@ -3,6 +3,8 @@ package com.reolle.account;
 import com.reolle.domain.Account;
 import com.reolle.domain.Tag;
 import com.reolle.domain.Zone;
+import com.reolle.mail.EmailMessage;
+import com.reolle.mail.EmailService;
 import com.reolle.settings.form.NicknameForm;
 import com.reolle.settings.form.Notifications;
 import com.reolle.settings.form.Profile;
@@ -30,7 +32,8 @@ import java.util.Set;
 public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
-    private final JavaMailSender javaMailSender;
+    //private final JavaMailSender javaMailSender;
+    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
@@ -59,11 +62,19 @@ public class AccountService implements UserDetailsService {
     }
 
     public void sendSignUpConfirmEmail(Account newAccount) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(newAccount.getEmail());
-        mailMessage.setSubject("스터디올레, 회원 가입 인증");
-        mailMessage.setText("/check-email-token?token=" + newAccount.getEmailCheckToken() + "&email=" + newAccount.getEmail());
-        javaMailSender.send(mailMessage);
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(newAccount.getEmail())
+                .subject("스터디올레,회원 가입 인증")
+                .message("/check-email-token?token=" + newAccount.getEmailCheckToken() +
+                        "&email=" + newAccount.getEmail())
+                .build();
+
+        emailService.sendEmail(emailMessage);
+//        SimpleMailMessage mailMessage = new SimpleMailMessage();
+//        mailMessage.setTo(newAccount.getEmail());
+//        mailMessage.setSubject("스터디올레, 회원 가입 인증");
+//        mailMessage.setText("/check-email-token?token=" + newAccount.getEmailCheckToken() + "&email=" + newAccount.getEmail());
+//        javaMailSender.send(mailMessage);
     }
 
 
@@ -132,13 +143,20 @@ public class AccountService implements UserDetailsService {
     }
 
     public void sendLoginLink(Account account) {
-        account.generateEmailCheckToken();
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(account.getEmail());
-        mailMessage.setSubject("스터디올레, 로그인 링크");
-        mailMessage.setText("/login-by-email?token=" + account.getEmailCheckToken()
-                + "&email=" + account.getEmail());
-        javaMailSender.send(mailMessage);
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(account.getEmail())
+                .subject("스터디올래, 로그인 링크")
+                .message("/login-by-email?token=" + account.getEmailCheckToken() +
+                        "&email=" + account.getEmail())
+                .build();
+        emailService.sendEmail(emailMessage);
+//        account.generateEmailCheckToken();
+//        SimpleMailMessage mailMessage = new SimpleMailMessage();
+//        mailMessage.setTo(account.getEmail());
+//        mailMessage.setSubject("스터디올레, 로그인 링크");
+//        mailMessage.setText("/login-by-email?token=" + account.getEmailCheckToken()
+//                + "&email=" + account.getEmail());
+//        javaMailSender.send(mailMessage);
 
     }
 
