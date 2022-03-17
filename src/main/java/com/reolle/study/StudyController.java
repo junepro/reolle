@@ -14,6 +14,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
@@ -27,10 +28,19 @@ public class StudyController {
     private final StudyService studyService;
     private final ModelMapper modelMapper;
     private final StudyFormValidator studyFormValidator;
+    private final StudyRepository studyRepository;
 
     @InitBinder("studyForm")
     public void studyFormInitBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(studyFormValidator);
+    }
+
+    @GetMapping("/study/{path}")
+    public String viewStudy(@CurrentAccount Account account, @PathVariable String path,
+                            Model model) {
+        model.addAttribute(account);
+        model.addAttribute(studyRepository.findByPath(path));
+        return "study/view";
     }
 
     @GetMapping("/new-study")
@@ -41,11 +51,11 @@ public class StudyController {
     }
 
     @PostMapping("/new-study")
-    public String newStudySubmit(@CurrentAccount Account account, @Valid StudyForm studyForm,
-                                 Errors errors) {
+    public String newStudySubmit(@CurrentAccount Account account, @Valid StudyForm studyForm, Errors errors) {
         if (errors.hasErrors()) {
             return "study/form";
         }
+
         Study newStudy = studyService.createNewStudy(modelMapper.map(studyForm, Study.class), account);
         return "redirect:/study/" + URLEncoder.encode(newStudy.getPath(), StandardCharsets.UTF_8);
     }
