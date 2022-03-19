@@ -11,6 +11,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.reolle.study.form.StudyForm.VALID_PATH_PATTERN;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -121,5 +123,36 @@ public class StudyService {
 
     public void stopRecruit(Study study) {
         study.stopRecruit();
+    }
+
+    public boolean isValidPath(String newPath) {
+
+        if (!newPath.matches(VALID_PATH_PATTERN)) {
+            return false;
+        }
+        return !repository.existsByPath(newPath);
+    }
+
+    public void updateStudyPath(Study study, String newPath) {
+        study.setPath(newPath);
+    }
+
+
+    public boolean isValidTitle(String newTitle) {
+
+        return newTitle.length() <= 50;
+    }
+
+
+    public void updateStudyTitle(Study study, String newTitle) {
+        study.setTitle(newTitle);
+    }
+
+    public void remove(Study study) {
+        if (study.isRemovable()) {
+            repository.delete(study);
+        } else {
+            throw new IllegalArgumentException("스터디를 삭제 할 수 없습니다");
+        }
     }
 }
