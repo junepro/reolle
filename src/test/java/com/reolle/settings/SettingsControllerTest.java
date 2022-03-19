@@ -8,15 +8,15 @@ import com.reolle.account.AccountService;
 import com.reolle.domain.Account;
 import com.reolle.domain.Tag;
 import com.reolle.domain.Zone;
-import com.reolle.settings.form.TagForm;
-import com.reolle.settings.form.ZoneForm;
+import com.reolle.tag.TagForm;
+import com.reolle.zone.ZoneForm;
 import com.reolle.tag.TagRepository;
 import com.reolle.zone.ZoneRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
+
 import static com.reolle.settings.SettingsController.*;
 
 import org.springframework.beans.factory.annotation.Autowired;

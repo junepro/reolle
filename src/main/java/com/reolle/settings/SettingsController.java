@@ -10,7 +10,10 @@ import com.reolle.domain.Zone;
 import com.reolle.settings.form.*;
 import com.reolle.settings.validator.NicknameValidator;
 import com.reolle.settings.validator.PasswordFormValidator;
+import com.reolle.tag.TagForm;
 import com.reolle.tag.TagRepository;
+import com.reolle.tag.TagService;
+import com.reolle.zone.ZoneForm;
 import com.reolle.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -47,6 +50,7 @@ public class SettingsController {
     private final AccountService accountService;
     private final ModelMapper modelMapper;
     private final NicknameValidator nicknameValidator;
+    private final TagService tagService;
     private final TagRepository tagRepository;
     private final ZoneRepository zoneRepository;
     private final ObjectMapper objectMapper;
@@ -157,13 +161,7 @@ public class SettingsController {
 
     @PostMapping(TAGS + "/add")
     public ResponseEntity addTag(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
-        String title = tagForm.getTagTitle();
-
-        Tag tag = tagRepository.findByTitle(title);
-        if (tag == null) {
-            tag = tagRepository.save(Tag.builder().title(tagForm.getTagTitle()).build());
-        }
-
+        Tag tag = tagService.findOrCrateNew(tagForm.getTagTitle());
         accountService.addTag(account, tag);
         return ResponseEntity.ok().build();
     }

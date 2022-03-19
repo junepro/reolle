@@ -1,4 +1,4 @@
-package com.reolle.settings.form;
+package com.reolle.tag;
 
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
