@@ -4,6 +4,8 @@ import com.reolle.account.UserAccount;
 import lombok.*;
 
 import javax.persistence.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +24,8 @@ import java.util.Set;
         @NamedAttributeNode("managers")})
 @NamedEntityGraph(name = "Study.withManagers", attributeNodes = {
         @NamedAttributeNode("managers")})
+@NamedEntityGraph(name = "Study.withMembers", attributeNodes = {
+        @NamedAttributeNode("members")})
 
 @Entity
 @Getter @Setter @EqualsAndHashCode(of = "id")
@@ -89,10 +93,6 @@ public class Study {
         return this.managers.contains(userAccount.getAccount());
     }
 
-    public void addMember(Account account) {
-        this.members.add(account);
-    }
-
     public String getImage() {
         return image != null ? image : "/images/default_banner.png";
     }
@@ -140,5 +140,17 @@ public class Study {
 
     public boolean isRemovable() {
         return !this.published;
+    }
+
+    public void addMember(Account account) {
+        this.getMembers().add(account);
+    }
+
+    public void removeMember(Account account) {
+        this.getMembers().remove(account);
+    }
+
+    public String getEncodedPath() {
+        return URLEncoder.encode(this.path, StandardCharsets.UTF_8);
     }
 }
