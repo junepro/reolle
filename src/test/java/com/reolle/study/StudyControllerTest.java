@@ -5,6 +5,7 @@ import com.reolle.account.AccountRepository;
 import com.reolle.domain.Account;
 import com.reolle.domain.Study;
 import lombok.RequiredArgsConstructor;
+import lombok.With;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,16 +29,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class StudyControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
-    @Autowired StudyService studyService;
-    @Autowired StudyRepository studyRepository;
+    protected MockMvc mockMvc;
     @Autowired
-    AccountRepository accountRepository;
-
-    @AfterEach
-    void afterEach() {
-        accountRepository.deleteAll();
-    }
+    protected StudyService studyService;
+    @Autowired
+    protected StudyRepository studyRepository;
+    @Autowired
+    protected AccountRepository accountRepository;
 
     @Test
     @WithAccount("keesun")
@@ -106,5 +104,53 @@ public class StudyControllerTest {
                 .andExpect(view().name("study/view"))
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("study"));
+    }
+
+    @Test
+    @WithAccount("keesun")
+    @DisplayName("스터디 가입")
+    void joinStudy() throws Exception {
+        Account whiteship = createAccount("whiteship");
+
+        Study study = createStudy("test-study", whiteship);
+
+        mockMvc.perform(get("/study/" + study.getPath() + "/join"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + study.getPath() + "/members"));
+
+        Account keesun = accountRepository.findByNickname("keesun");
+        assertTrue(study.getMembers().contains(keesun));
+    }
+
+    @Test
+    @WithAccount("keesun")
+    @DisplayName("스터디 탈퇴")
+    void leaveStudy() throws Exception {
+        Account whiteship = createAccount("whiteship");
+        Study study = createStudy("test-study", whiteship);
+
+        Account keesun = accountRepository.findByNickname("keesun");
+        studyService.addMember(study, keesun);
+
+        mockMvc.perform(get("/study/" + study.getPath() + "/leave"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + study.getPath() + "/members"));
+
+        assertFalse(study.getMembers().contains(keesun));
+    }
+
+    protected Study createStudy(String path, Account manager) {
+        Study study = new Study();
+        study.setPath(path);
+        studyService.createNewStudy(study, manager);
+        return study;
+    }
+
+    protected Account createAccount(String nickname) {
+        Account whiteship = new Account();
+        whiteship.setNickname(nickname);
+        whiteship.setEmail(nickname + "@email.com");
+        accountRepository.save(whiteship);
+        return whiteship;
     }
 }
