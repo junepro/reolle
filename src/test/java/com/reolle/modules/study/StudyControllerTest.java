@@ -1,5 +1,6 @@
 package com.reolle.modules.study;
 
+import com.reolle.infra.AbstractContainerBaseTest;
 import com.reolle.infra.MockMvcTest;
 import com.reolle.modules.account.AccountFactory;
 import com.reolle.modules.account.WithAccount;
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @MockMvcTest
-public class StudyControllerTest {
+public class StudyControllerTest extends AbstractContainerBaseTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired StudyService studyService;

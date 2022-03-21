@@ -2,6 +2,7 @@ package com.reolle.modules.account;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reolle.infra.AbstractContainerBaseTest;
 import com.reolle.infra.MockMvcTest;
 import com.reolle.modules.tag.Tag;
 import com.reolle.modules.zone.Zone;
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @MockMvcTest
-public class SettingsControllerTest {
+public class SettingsControllerTest extends AbstractContainerBaseTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired AccountRepository accountRepository;

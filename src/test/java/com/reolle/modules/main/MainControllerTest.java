@@ -1,5 +1,6 @@
-package com.reolle;
+package com.reolle.modules.main;
 
+import com.reolle.infra.AbstractContainerBaseTest;
 import com.reolle.infra.MockMvcTest;
 import com.reolle.modules.account.AccountRepository;
 import com.reolle.modules.account.AccountService;
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @MockMvcTest
-class MainControllerTest {
+class MainControllerTest extends AbstractContainerBaseTest {
 
     @Autowired
     MockMvc mockMvc;
