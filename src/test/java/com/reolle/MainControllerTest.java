@@ -1,8 +1,9 @@
 package com.reolle;
 
-import com.reolle.account.AccountRepository;
-import com.reolle.account.AccountService;
-import com.reolle.account.form.SignUpForm;
+import com.reolle.infra.MockMvcTest;
+import com.reolle.modules.account.AccountRepository;
+import com.reolle.modules.account.AccountService;
+import com.reolle.modules.account.form.SignUpForm;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,8 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@MockMvcTest
 class MainControllerTest {
 
     @Autowired
