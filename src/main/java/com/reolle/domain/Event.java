@@ -9,8 +9,15 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+//모임 목록조회할때 여러번 쿼리 날라가서 해결학위해 필요한것만
+@NamedEntityGraph(
+        name = "Event.withEnrollments",
+        attributeNodes = @NamedAttributeNode("enrollments")
+)
 @Entity
-@Getter @Setter @EqualsAndHashCode(of = "id")
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
 public class Event {
 
     @Id
@@ -71,6 +78,11 @@ public class Event {
         }
 
         return false;
+    }
+    //남은자리 있는지여부 확인
+    public int numberOfRemainSpots() {
+        return this.limitOfEnrollments - (int) this.enrollments.stream().filter(Enrollment::isAccepted).count();
+                                                //수락된 참가 인원수 뺸것
     }
 
     private boolean isAlreadyEnrolled(UserAccount userAccount) {

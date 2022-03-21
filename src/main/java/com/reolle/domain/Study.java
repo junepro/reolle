@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-
+//엔티티 조회시점에 연관된 엔티티들을 함께 조회하는 기능 담당
 @NamedEntityGraph(name = "Study.withAll", attributeNodes = {
         @NamedAttributeNode("tags"),
         @NamedAttributeNode("zones"),
