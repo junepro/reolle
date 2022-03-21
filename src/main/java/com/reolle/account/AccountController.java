@@ -1,6 +1,8 @@
 package com.reolle.account;
 
 
+import com.reolle.account.form.SignUpForm;
+import com.reolle.account.validator.SignUpFormValidator;
 import com.reolle.domain.Account;
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 
 @Controller
 @RequiredArgsConstructor
@@ -108,7 +109,7 @@ public class AccountController {
 
         if (!account.canSendConfirmEmail()) {
             model.addAttribute("error", "이메일 로그인은 1시간 뒤에 사용할 수 있습니다.");
-          //  return "account/email-login";
+            return "account/email-login";
         }
 
         accountService.sendLoginLink(account);

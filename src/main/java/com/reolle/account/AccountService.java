@@ -1,18 +1,16 @@
 package com.reolle.account;
 
+import com.reolle.account.form.SignUpForm;
 import com.reolle.config.AppProperties;
 import com.reolle.domain.Account;
 import com.reolle.domain.Tag;
 import com.reolle.domain.Zone;
 import com.reolle.mail.EmailMessage;
 import com.reolle.mail.EmailService;
-import com.reolle.settings.form.NicknameForm;
 import com.reolle.settings.form.Notifications;
 import com.reolle.settings.form.Profile;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;

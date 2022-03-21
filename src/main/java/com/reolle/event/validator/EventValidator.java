@@ -1,4 +1,4 @@
-package com.reolle.event;
+package com.reolle.event.validator;
 
 import com.reolle.domain.Event;
 import com.reolle.event.form.EventForm;

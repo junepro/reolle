@@ -1,4 +1,4 @@
-package com.reolle.account;
+package com.reolle.account.form;
 
 
 import lombok.Data;

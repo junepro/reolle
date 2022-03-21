@@ -1,5 +1,7 @@
-package com.reolle.account;
+package com.reolle.account.validator;
 
+import com.reolle.account.AccountRepository;
+import com.reolle.account.form.SignUpForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

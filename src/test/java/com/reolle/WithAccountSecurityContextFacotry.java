@@ -1,7 +1,7 @@
 package com.reolle;
 
 import com.reolle.account.AccountService;
-import com.reolle.account.SignUpForm;
+import com.reolle.account.form.SignUpForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

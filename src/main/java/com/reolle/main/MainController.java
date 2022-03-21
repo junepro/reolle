@@ -1,4 +1,4 @@
-package com.reolle;
+package com.reolle.main;
 
 import com.reolle.account.CurrentAccount;
 import com.reolle.domain.Account;
