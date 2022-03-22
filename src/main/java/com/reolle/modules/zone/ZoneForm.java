@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class ZoneForm {
 
+    //이름 파싱하는 부분 aa(bb)cc
     private String zoneName;
 
-    //이름 파싱하는 부분 aa(bb)cc
     public String getCityName() {
         return zoneName.substring(0, zoneName.indexOf("("));
     }
@@ -23,8 +23,7 @@ public class ZoneForm {
     public Zone getZone() {
         return Zone.builder().city(this.getCityName())
                 .localNameOfCity(this.getLocalNameOfCity())
-                .province(this.getProvinceName())
-                .build();
+                .province(this.getProvinceName()).build();
     }
 
 }
