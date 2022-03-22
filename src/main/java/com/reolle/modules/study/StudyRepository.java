@@ -1,10 +1,14 @@
 package com.reolle.modules.study;
 
+import com.reolle.modules.account.Account;
+import com.reolle.modules.tag.Tag;
+import com.reolle.modules.zone.Zone;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Transactional(readOnly = true)
 public interface StudyRepository extends JpaRepository<Study, Long>, StudyRepositoryExtension {
@@ -38,5 +42,10 @@ public interface StudyRepository extends JpaRepository<Study, Long>, StudyReposi
     @EntityGraph(attributePaths = {"members", "managers"})
     Study findStudyWithManagersAndMembersById(Long id);
 
+    @EntityGraph(attributePaths = {"zones", "tags"})
     List<Study> findFirst9ByPublishedAndClosedOrderByPublishedDateTimeDesc(boolean published, boolean closed);
+
+    List<Study> findFirst5ByManagersContainingAndClosedOrderByPublishedDateTimeDesc(Account account, boolean closed);
+
+    List<Study> findFirst5ByMembersContainingAndClosedOrderByPublishedDateTimeDesc(Account account, boolean closed);
 }
