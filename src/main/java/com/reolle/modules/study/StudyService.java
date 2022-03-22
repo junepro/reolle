@@ -1,11 +1,13 @@
 package com.reolle.modules.study;
 
 import com.reolle.modules.account.Account;
+import com.reolle.modules.study.event.StudyCreatedEvent;
 import com.reolle.modules.tag.Tag;
 import com.reolle.modules.zone.Zone;
 import com.reolle.modules.study.form.StudyDescriptionForm;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,7 @@ public class StudyService {
 
     private final StudyRepository repository;
     private final ModelMapper modelMapper;
+    private final ApplicationEventPublisher eventPublisher;
 
     public Study createNewStudy(Study study, Account account) {
         Study newStudy = repository.save(study);
@@ -110,6 +113,8 @@ public class StudyService {
 
     public void publish(Study study) {
         study.publish();
+        this.eventPublisher.publishEvent(new StudyCreatedEvent(study));
+
 
     }
     public void close(Study study) {

@@ -23,6 +23,8 @@ public class Notification {
 
     private String message;
 
+    private String title;
+
     private boolean checked;
 
     @ManyToOne

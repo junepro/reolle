@@ -19,20 +19,27 @@ import java.util.Set;
         @NamedAttributeNode("zones"),
         @NamedAttributeNode("managers"),
         @NamedAttributeNode("members")})
-@NamedEntityGraph(name = "Study.withTagsAndManagers",attributeNodes = {
+@NamedEntityGraph(name = "Study.withTagsAndManagers", attributeNodes = {
         @NamedAttributeNode("tags"),
         @NamedAttributeNode("managers")})
-@NamedEntityGraph(name = "Study.withZonesAndManagers",attributeNodes = {
+@NamedEntityGraph(name = "Study.withZonesAndManagers", attributeNodes = {
         @NamedAttributeNode("zones"),
         @NamedAttributeNode("managers")})
 @NamedEntityGraph(name = "Study.withManagers", attributeNodes = {
         @NamedAttributeNode("managers")})
 @NamedEntityGraph(name = "Study.withMembers", attributeNodes = {
         @NamedAttributeNode("members")})
+@NamedEntityGraph(name = "Study.withTagsAndZones", attributeNodes = {
+        @NamedAttributeNode("tags"),
+        @NamedAttributeNode("zones")})
 
 @Entity
-@Getter @Setter @EqualsAndHashCode(of = "id")
-@Builder @AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Study {
 
     @Id
@@ -40,7 +47,7 @@ public class Study {
     private Long id;
 
     @ManyToMany
-    private Set<Account> managers =new HashSet<>();
+    private Set<Account> managers = new HashSet<>();
 
     @ManyToMany
     private Set<Account> members = new HashSet<>();
@@ -52,17 +59,19 @@ public class Study {
 
     private String shortDescription;
 
-    @Lob @Basic(fetch = FetchType.EAGER)
+    @Lob
+    @Basic(fetch = FetchType.EAGER)
     private String fullDescription;
 
-    @Lob @Basic(fetch = FetchType.EAGER)
+    @Lob
+    @Basic(fetch = FetchType.EAGER)
     private String image;
 
     @ManyToMany
-    private Set<Tag> tags= new HashSet<>();
+    private Set<Tag> tags = new HashSet<>();
 
     @ManyToMany
-    private Set<Zone> zones= new HashSet<>();
+    private Set<Zone> zones = new HashSet<>();
 
     private LocalDateTime publishedDateTime;
 
@@ -81,6 +90,7 @@ public class Study {
     public void addManager(Account account) {
         this.managers.add(account);
     }
+
     public boolean isJoinable(UserAccount userAccount) {
         Account account = userAccount.getAccount();
         return this.isPublished() && this.isRecruiting()
@@ -122,7 +132,7 @@ public class Study {
         if (canUpdateRecruiting()) {
             this.recruiting = true;
             this.recruitingUpdatedDateTime = LocalDateTime.now();
-        }else {
+        } else {
             throw new RuntimeException("인원 모집을 시작할 수 없습니다. 스터디를 공개하거나 한 시간 뒤 다시 시도하세요.");
         }
     }
