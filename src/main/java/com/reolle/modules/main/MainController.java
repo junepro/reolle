@@ -40,9 +40,12 @@ public class MainController {
                               @PageableDefault(size = 9, sort = "publishedDateTime", direction = Sort.Direction.DESC)
                                       Pageable pageable) {
 
-        Page<Study> studyPage = studyRepository.findByKeyword(keyword,pageable);
+        Page<Study> studyPage = studyRepository.findByKeyword(keyword, pageable);
         model.addAttribute("studyPage", studyPage);
         model.addAttribute("keyword", keyword);
+        //정렬방식
+        model.addAttribute("sortProperty",          //설립 일시 포함 이면 설립일시 우선 아니면 멤버수
+                pageable.getSort().toString().contains("publishedDateTime") ? "publishedDateTime" : "memberCount");
         return "search";
     }
 }

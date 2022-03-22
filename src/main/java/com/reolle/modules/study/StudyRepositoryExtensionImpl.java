@@ -30,12 +30,11 @@ public class StudyRepositoryExtensionImpl extends QuerydslRepositorySupport impl
                 //n+1 select 문제 해결 하기위해
                 .leftJoin(study.tags, QTag.tag).fetchJoin()
                 .leftJoin(study.zones, QZone.zone).fetchJoin()
-                .leftJoin(study.members, QAccount.account).fetchJoin() //join한 데이터만가져오는것
+                //.leftJoin(study.members, QAccount.account).fetchJoin() //join한 데이터만가져오는것
                 .distinct();
 
         JPQLQuery<Study> pageableQuery = getQuerydsl().applyPagination(pageable, query);
         QueryResults<Study> fetchResults = pageableQuery.fetchResults();
-
         return new PageImpl<>(fetchResults.getResults(), pageable, fetchResults.getTotal());
     }
 }
