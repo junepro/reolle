@@ -14,24 +14,27 @@ import java.util.HashSet;
 import java.util.Set;
 
 //엔티티 조회시점에 연관된 엔티티들을 함께 조회하는 기능 담당
-@NamedEntityGraph(name = "Study.withAll", attributeNodes = {
-        @NamedAttributeNode("tags"),
-        @NamedAttributeNode("zones"),
-        @NamedAttributeNode("managers"),
-        @NamedAttributeNode("members")})
-@NamedEntityGraph(name = "Study.withTagsAndManagers", attributeNodes = {
-        @NamedAttributeNode("tags"),
-        @NamedAttributeNode("managers")})
-@NamedEntityGraph(name = "Study.withZonesAndManagers", attributeNodes = {
-        @NamedAttributeNode("zones"),
-        @NamedAttributeNode("managers")})
-@NamedEntityGraph(name = "Study.withManagers", attributeNodes = {
-        @NamedAttributeNode("managers")})
-@NamedEntityGraph(name = "Study.withMembers", attributeNodes = {
-        @NamedAttributeNode("members")})
-@NamedEntityGraph(name = "Study.withTagsAndZones", attributeNodes = {
-        @NamedAttributeNode("tags"),
-        @NamedAttributeNode("zones")})
+//@NamedEntityGraph(name = "Study.withAll", attributeNodes = {
+//        @NamedAttributeNode("tags"),
+//        @NamedAttributeNode("zones"),
+//        @NamedAttributeNode("managers"),
+//        @NamedAttributeNode("members")})
+//@NamedEntityGraph(name = "Study.withTagsAndManagers", attributeNodes = {
+//        @NamedAttributeNode("tags"),
+//        @NamedAttributeNode("managers")})
+//@NamedEntityGraph(name = "Study.withZonesAndManagers", attributeNodes = {
+//        @NamedAttributeNode("zones"),
+//        @NamedAttributeNode("managers")})
+//@NamedEntityGraph(name = "Study.withManagers", attributeNodes = {
+//        @NamedAttributeNode("managers")})
+//@NamedEntityGraph(name = "Study.withMembers", attributeNodes = {
+//        @NamedAttributeNode("members")})
+//@NamedEntityGraph(name = "Study.withTagsAndZones", attributeNodes = {
+//        @NamedAttributeNode("tags"),
+//        @NamedAttributeNode("zones")})
+//@NamedEntityGraph(name = "Study.withManagersAndMembers", attributeNodes = {
+//        @NamedAttributeNode("managers"),
+//        @NamedAttributeNode("members")})
 
 @Entity
 @Getter
