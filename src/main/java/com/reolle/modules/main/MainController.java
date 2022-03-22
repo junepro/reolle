@@ -6,6 +6,10 @@ import com.reolle.modules.study.Study;
 import com.reolle.modules.study.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.Banner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,9 +36,12 @@ public class MainController {
     }
 
     @GetMapping("/search/study")
-    public String searchStudy(String keyword, Model model) {
-        List<Study> studyList = studyRepository.findByKeyword(keyword);
-        model.addAttribute(studyList);
+    public String searchStudy(String keyword, Model model,
+                              @PageableDefault(size = 9, sort = "publishedDateTime", direction = Sort.Direction.DESC)
+                                      Pageable pageable) {
+
+        Page<Study> studyPage = studyRepository.findByKeyword(keyword,pageable);
+        model.addAttribute("studyPage", studyPage);
         model.addAttribute("keyword", keyword);
         return "search";
     }
