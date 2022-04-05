@@ -41,7 +41,7 @@
 개인 프로필 수정 - 개인프로필 원하는 대로 수정할 수 있습니다
 
 
-![image](https://user-images.githubusercontent.com/57428866/160225356-4a7fc21e-5199-4cf6-ad63-065338c4071d.png)
+![image](https://user-images.githubusercontent.com/57428866/161726404-d1e7eca6-06bb-402e-9183-3748e4ef0ddc.png)
 
 
 
